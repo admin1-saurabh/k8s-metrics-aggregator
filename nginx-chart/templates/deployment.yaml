@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-chart
+  labels:
+    helm.sh/chart: nginx-chart-0.1.0
+    app.kubernetes.io/name: nginx-chart
+    app.kubernetes.io/instance: nginx-chart
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nginx-chart
+      app.kubernetes.io/instance: nginx-chart
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: nginx-chart-0.1.0
+        app.kubernetes.io/name: nginx-chart
+        app.kubernetes.io/instance: nginx-chart
+        app.kubernetes.io/version: "1.16.0"
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      serviceAccountName: nginx-chart
+      containers:
+        - name: nginx-chart
+          image: "nginx:1.16.0"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
