@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: room-authentication-deployment
+spec:
+  replicas: 3  # Number of pods to run
+  selector:
+    matchLabels:
+      app: room-authentication
+  template:
+    metadata:
+      labels:
+        app: room-authentication
+    spec:
+      containers:
+        - name: room-authentication-container
+          image: room-authentication-app  
+          ports:
+            - containerPort: 3000  
+          env:
+            - name: NODE_ENV
+              value: "production"  \
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: room-authentication-service
+spec:
+  selector:
+    app: room-authentication
+  ports:
+    - protocol: TCP
+      port: 80  # External port
+      targetPort: 3000  
+  type: LoadBalancer 
